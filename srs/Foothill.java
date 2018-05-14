@@ -24,24 +24,29 @@ public class Foothill
       searchTree.traverse(intPrinter);
 
       System.out.println( "Initial size: " + searchTree.size() );
-      for (k = 1; k <= 32; k++)
+      for (k = -1; k <= 32; k++)
          searchTree.insert(k);
       System.out.println( "New size: " + searchTree.size() );
 
       System.out.println( "\nTraversal");
       searchTree.traverse(intPrinter);
       System.out.println();
-
-      for (k = -1; k < 10; k++)
+//      searchTree.remove(5);
+      System.out.println( "splay " + k + " --> root: "
+              + searchTree.showRoot()
+              + " height: " + searchTree.showHeight() );
+      for (k = 1; k < 10; k++)
       {
-         // searchTree.contains(k);  // alternative to find() - different error return
+         //searchTree.contains(k);  // alternative to find() - different error return
+         //searchTree.find(k);
+
          try
          {
             searchTree.find(k);
          }
          catch( Exception e )
          {
-            System.out.println( " oops " );
+            System.out.println( " oops " + e.getMessage() );
          }
          System.out.println( "splay " + k + " --> root: "
                  + searchTree.showRoot()

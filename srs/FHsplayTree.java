@@ -5,37 +5,29 @@ public class FHsplayTree<E extends Comparable<? super E>>
 
     @Override
     public boolean insert(E x) {
-        int compareResult;
-        FHs_treeNode<E> splayedNode;
-        FHs_treeNode<E> mRoot = super.mRoot;
+        FHs_treeNode<E> root;
+        if (super.mRoot == null)
+        {
+            super.mRoot = new FHs_treeNode<E>(x, null, null);
+        } else
+        {
+            root = splay(super.mRoot, x);
+            int compareResult;
+            compareResult = x.compareTo(root.data);
+            if (compareResult < 0)
+            {
+                super.mRoot = new FHs_treeNode<E>(x, root.lftChild, root);
 
-        if (mRoot == null) {
-            mRoot = new FHs_treeNode(x, null, null);
-            mSize++;
-            return true;
-        }
-        else {
-            splayedNode = splay(mRoot, x);
-            compareResult = mRoot.data.compareTo(x);
-            if(compareResult == 1){
-                FHs_treeNode<E> newNode = new FHs_treeNode<E>(x, null, null);
-                newNode.lftChild = splayedNode.lftChild;
-                newNode.rtChild = splayedNode;
-                mRoot = newNode;
-                return true;
-            }
-            if(compareResult == -1){
-                FHs_treeNode<E> newNode = new FHs_treeNode<E>(x, null, null);
-                newNode.lftChild = splayedNode;
-                newNode.rtChild = splayedNode.rtChild;
-                mRoot = newNode;
-                return true;
-            }
-            else{
+            } else if (compareResult > 0)
+            {
+                super.mRoot = new FHs_treeNode<E>(x, root, root.rtChild);
+            } else
+            {
                 return false;
             }
         }
-
+        super.mSize++;
+        return true;
     }
 
     @Override

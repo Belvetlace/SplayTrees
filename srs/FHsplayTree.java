@@ -1,122 +1,146 @@
 import cs_1c.*;
 
 public class FHsplayTree<E extends Comparable<? super E>>
-        extends FHsearch_tree<E>
-{
+        extends FHsearch_tree<E> {
 
-   @Override
-   public boolean insert( E x )
-   {
-      int compareResult;
-      FHs_treeNode mRoot = super.mRoot;
+    @Override
+    public boolean insert(E x) {
+        int compareResult;
+        FHs_treeNode<E> splayedNode;
+        FHs_treeNode<E> mRoot = super.mRoot;
 
-      if (mRoot == null)
-      {
-         mRoot = new FHs_treeNode(x,null,null);
-         mSize++;
-         return true;
-      }
-
-      FHs_treeNode newNode, parent;
-      parent = mRoot;
-
-      while(true)
-      {
-         compareResult = parent.data.compareTo(x);
-         if ( compareResult > 0 )
-         {
-            if( parent.lftThread != null )
-               parent = parent.lftChild;
-            else
-            {
-               // place as new left child
-               newNode = new FHs_treeNode(x, parent.lftChild, parent);
-               parent.lftChild = newNode;
-               parent.lftThread = false;
-               break;
+        if (mRoot == null) {
+            mRoot = new FHs_treeNode(x, null, null);
+            mSize++;
+            return true;
+        }
+        else {
+            splayedNode = splay(mRoot, x);
+            compareResult = mRoot.data.compareTo(x);
+            if(compareResult == 1){
+                FHs_treeNode<E> newNode = new FHs_treeNode<E>(x, null, null);
+                newNode.lftChild = splayedNode.lftChild;
+                newNode.rtChild = splayedNode;
+                mRoot = newNode;
+                return true;
             }
-         }
-         else if ( compareResult < 0 )
-         {
-            if( !(parent.rtThread) )
-               parent = parent.rtChild;
-            else
-            {
-               // place as new right child
-               newNode = new FHs_treeNode
-                       (x, parent, parent.rtChild);
-               parent.rtChild = newNode;
-               parent.rtThread = false;
-               break;
+            if(compareResult == -1){
+                FHs_treeNode<E> newNode = new FHs_treeNode<E>(x, null, null);
+                newNode.lftChild = splayedNode;
+                newNode.rtChild = splayedNode.rtChild;
+                mRoot = newNode;
+                return true;
             }
-         }
-         else
-            return false;  // duplicate
-      }
-
-      mSize++;
-      return true;
-   }
-
-   @Override
-   public boolean remove( E x )
-   {
-
-   }
-
-   // returns (doesn't really show) the m_root data,
-   // or null if there is nothing in the tree.
-   // This is useful for debugging and proving that
-   // the class really is splaying.
-   public E showRoot()
-   {
-
-      return null;
-   }
-
-   //Add the following protected (or private) methods:
-
-   // this method is analyzed in depth in the modules
-   // and a detailed algorithm is given there.
-   protected FHs_treeNode<E> splay( FHs_treeNode<E> root, E x )
-   {
-      FHs_treeNode<E> rightTree, leftTree, rightTreeMin, leftTreeMax = null;
-      while(root != null){
-         int compareResult = root.data.compareTo(x);
-         if(compareResult > 0) {
-            if (root.lftChild == null) {
-               break;
+            else{
+                return false;
             }
-            compareResult = root.lftChild.data.compareTo(x);
+        }
+
+    }
+
+    @Override
+    public boolean remove(E x) {
+        FHs_treeNode<E> mRoot = super.mRoot;
+        FHs_treeNode<E> splayedNode;
+        if(mRoot == null){
+            return false;
+        }
+        else{
+            splayedNode = splay(super.mRoot, x);
+        }
+        if(x != mRoot) {
+            return false;
+        }
+        if(splayedNode.lftChild == null){
+            splayedNode = mRoot.rtChild;
+        }
+        else{
+            splayedNode = mRoot.lftChild;
+            FHs_treeNode<E> max = findMax(splayedNode);
+            splayedNode = splay(splayedNode, x);
+            splayedNode.rtChild = mRoot.rtChild;
+        }
+        mRoot = splayedNode;
+        return true;
+    }
+
+    // returns (doesn't really show) the m_root data,
+    // or null if there is nothing in the tree.
+    // This is useful for debugging and proving that
+    // the class really is splaying.
+    public E showRoot() {
+
+        return null;
+    }
+
+    //Add the following protected (or private) methods:
+
+    // this method is analyzed in depth in the modules
+    // and a detailed algorithm is given there.
+    protected FHs_treeNode<E> splay(FHs_treeNode<E> root, E x) {
+        FHs_treeNode<E> rightTree = null, leftTree = null, rightTreeMin = null, leftTreeMax = null;
+        FHs_treeNode<E> foo = null;
+        while (root != null) {
+            int compareResult = root.data.compareTo(x);
             if (compareResult > 0) {
-               FHs_treeNode foo = rotateWithLeftChild(root);
-               if (foo.lftChild == null) {
-                  break;
-               }
-               
-               //add root to rightTree under rightTree's minimum node (as the left child of rightTreeMin), unless of course rightTree is null (in which case you should set rightTree to be root)
-               //then update the rightTreeMin to point to the working root node
+                if (root.lftChild == null) {
+                    break;
+                }
+                compareResult = root.lftChild.data.compareTo(x);
+                if (compareResult > 0) {
+                    foo = rotateWithLeftChild(root);
+                    if (foo.lftChild == null) {
+                        break;
+                    }
+                }
+                if (rightTree == null) {
+                    rightTree = foo;
+                } else {
+                    rightTreeMin.lftChild = foo;
+                    rightTreeMin = foo;
+                }
+                root = root.lftChild;
+
+                //add root to rightTree under rightTree's minimum node (as the left child of rightTreeMin), unless of course rightTree is null (in which case you should set rightTree to be root)
+                //then update the rightTreeMin to point to the working root node
 
             }
-         }
             //update the new working root:  set root to root's left child
-         if(compareResult < 0){
-               if(root.rtChild == null){
-                  break;
-               }
-               compareResult = root.rtChild.data.compareTo(x);
-               if(compareResult < 0){
-                  FHs_treeNode foo = rotateWithRightChild(root);
-                  if(foo.rtChild == null){
-                     break;
-                  }
-               }
-               //add root to leftTree under leftTree's maximum node (as the left child of leftTreeMax), unless of course leftTree is null (in which case you should set leftTree to be root)
-              // then update the leftTreeMax to point to the working root node
-              // update the new working root:  set root to root's right child
+            if (compareResult < 0) {
+                if (root.rtChild == null) {
+                    break;
+                }
+                compareResult = root.rtChild.data.compareTo(x);
+                if (compareResult < 0) {
+                    foo = rotateWithRightChild(root);
+                    if (foo.rtChild == null) {
+                        break;
+                    }
+
+                }
+                if (leftTree == null) {
+                    leftTree = foo;
+                } else {
+                    leftTreeMax.lftChild = root;
+                    leftTreeMax = foo;
+                }
+                root = root.rtChild;
+                //add root to leftTree under leftTree's maximum node (as the left child of leftTreeMax), unless of course leftTree is null (in which case you should set leftTree to be root)
+                // then update the leftTreeMax to point to the working root node
+                // update the new working root:  set root to root's right child
+            } else {
+                break;
             }
-            break;
-      }
+        }
+        if (leftTree != null) {
+            leftTreeMax = root.lftChild;
+            root.lftChild = leftTree;
+        }
+        if (rightTree != null){
+            rightTreeMin = root.rtChild;
+            root.rtChild = rightTree;
+        }
+        return root;
    }
 
 

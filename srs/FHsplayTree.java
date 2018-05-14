@@ -61,13 +61,7 @@ public class FHsplayTree<E extends Comparable<? super E>>
    @Override
    public boolean remove( E x )
    {
-      FHs_treeNode mRoot = super.mRoot;
-      if(mRoot == null){
-         return false;
-      }
-      else{
-         splay(super.mRoot, x);
-      }
+
    }
 
    // returns (doesn't really show) the m_root data,
@@ -99,6 +93,7 @@ public class FHsplayTree<E extends Comparable<? super E>>
                if (foo.lftChild == null) {
                   break;
                }
+               
                //add root to rightTree under rightTree's minimum node (as the left child of rightTreeMin), unless of course rightTree is null (in which case you should set rightTree to be root)
                //then update the rightTreeMin to point to the working root node
 
@@ -129,16 +124,27 @@ public class FHsplayTree<E extends Comparable<? super E>>
    // Make the trivial adjustments and you've got it.
    protected FHs_treeNode<E> rotateWithLeftChild( FHs_treeNode<E> k2 )
    {
-
-      return null;
+      FHs_treeNode<E> k1 = k2.lftChild;
+      k2.lftChild = k1.rtChild;
+      k1.rtChild = k2;
+      k2.setHeight( Math.max( heightOf(k2.lftChild),  heightOf(k2.rtChild) ) + 1 );
+      k1.setHeight( Math.max( heightOf(k1.lftChild),  k2.getHeight() ) + 1 );
+      return k1;
    }
+   protected static int heightOf(FHs_treeNode t)
+   { return t == null? -1 : t.getHeight(); }
 
 
    // this is (almost) identical with the version found in FHavlTree.java.
    // Make the trivial adjustments and you've got it.
    protected FHs_treeNode<E> rotateWithRightChild( FHs_treeNode<E> k2 )
    {
-
+      FHs_treeNode<E> k1 = k2.rtChild;
+      k2.rtChild = k1.lftChild;
+      k1.lftChild = k2;
+      k2.setHeight( Math.max( heightOf(k2.lftChild),  heightOf(k2.rtChild) ) + 1 );
+      k1.setHeight( Math.max( heightOf(k1.rtChild),  k2.getHeight() ) + 1 );
+      return k1;
       return null;
    }
 

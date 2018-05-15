@@ -32,10 +32,10 @@ public class Foothill
       searchTree.traverse(intPrinter);
       System.out.println();
 //      searchTree.remove(5);
-      System.out.println( "splay " + k + " --> root: "
+      System.out.println("root: "
               + searchTree.showRoot()
               + " height: " + searchTree.showHeight() );
-      for (k = 1; k < 10; k++)
+      for (k = -1; k < 10; k++)
       {
          //searchTree.contains(k);  // alternative to find() - different error return
          //searchTree.find(k);
@@ -46,7 +46,7 @@ public class Foothill
          }
          catch( Exception e )
          {
-            System.out.println( " oops " + e.getMessage() );
+            System.out.println( " oops " + e.getMessage() +" " + e.toString());
          }
          System.out.println( "splay " + k + " --> root: "
                  + searchTree.showRoot()

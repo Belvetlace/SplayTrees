@@ -52,7 +52,7 @@ public class FHsplayTree<E extends Comparable<? super E>>
             splayedNode = splay(splayedNode, x);
             splayedNode.rtChild = mRoot.rtChild;
         }
-        mRoot = splayedNode;
+       super.mRoot = splayedNode;
         return true;
     }
 
@@ -61,8 +61,10 @@ public class FHsplayTree<E extends Comparable<? super E>>
     // This is useful for debugging and proving that
     // the class really is splaying.
     public E showRoot() {
-
-        return null;
+       if(super.mRoot == null){
+          return null;
+       }
+       return super.mRoot.data;
     }
 
     //Add the following protected (or private) methods:
@@ -113,7 +115,7 @@ public class FHsplayTree<E extends Comparable<? super E>>
                 if (leftTree == null) {
                     leftTree = foo;
                 } else {
-                    leftTreeMax.lftChild = root;
+                    leftTreeMax.rtChild = root;
                     leftTreeMax = foo;
                 }
                 root = root.rtChild;
@@ -143,13 +145,8 @@ public class FHsplayTree<E extends Comparable<? super E>>
       FHs_treeNode<E> k1 = k2.lftChild;
       k2.lftChild = k1.rtChild;
       k1.rtChild = k2;
-      k2.setHeight( Math.max( heightOf(k2.lftChild),  heightOf(k2.rtChild) ) + 1 );
-      k1.setHeight( Math.max( heightOf(k1.lftChild),  k2.getHeight() ) + 1 );
       return k1;
    }
-   protected static int heightOf(FHs_treeNode t)
-   { return t == null? -1 : t.getHeight(); }
-
 
    // this is (almost) identical with the version found in FHavlTree.java.
    // Make the trivial adjustments and you've got it.
@@ -158,10 +155,7 @@ public class FHsplayTree<E extends Comparable<? super E>>
       FHs_treeNode<E> k1 = k2.rtChild;
       k2.rtChild = k1.lftChild;
       k1.lftChild = k2;
-      k2.setHeight( Math.max( heightOf(k2.lftChild),  heightOf(k2.rtChild) ) + 1 );
-      k1.setHeight( Math.max( heightOf(k1.rtChild),  k2.getHeight() ) + 1 );
       return k1;
-      return null;
    }
 
 
@@ -169,8 +163,25 @@ public class FHsplayTree<E extends Comparable<? super E>>
    @Override
    protected FHs_treeNode<E> find( FHs_treeNode<E> root, E x )
    {
-
-      return null;
+      if(root == null){
+         return null;
+      }
+      //find x, if it is there splay for it, otherwise return null
+      int compareResult;
+      boolean found = false;
+      while(!found && root != null)
+      {
+         compareResult = x.compareTo(root.data);
+         if (compareResult < 0)
+            root = root.lftChild;
+         else if (compareResult > 0)
+            root = root.rtChild;
+         else
+            found = true;
+      }
+      if (!found)
+         return null;
+      return splay(super.mRoot, x);
    }
 
 }

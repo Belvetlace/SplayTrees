@@ -19,11 +19,17 @@ public class FHsplayTree<E extends Comparable<? super E>>
          compareResult = x.compareTo(root.data);
          if (compareResult < 0)
          {
-            super.mRoot = new FHs_treeNode<E>(x, root.lftChild, root);
+            FHs_treeNode<E> nodeLeft = root.lftChild;
+            FHs_treeNode<E> nodeRight = root;
+            root.lftChild = null;
+            super.mRoot = new FHs_treeNode<E>(x, nodeLeft, nodeRight);
             printDebugg();
          } else if (compareResult > 0)
          {
-            super.mRoot = new FHs_treeNode<E>(x, root, root.rtChild);
+            FHs_treeNode<E> nodeLeft = root;
+            FHs_treeNode<E> nodeRight = root.rtChild;
+            root.rtChild = null;
+            super.mRoot = new FHs_treeNode<E>(x, nodeLeft, nodeRight);
             printDebugg();
          } else
          {

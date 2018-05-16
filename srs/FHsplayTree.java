@@ -91,27 +91,23 @@ public class FHsplayTree<E extends Comparable<? super E>>
          if (compareResult > 0)
          {
             if (root.lftChild == null) { break; }
-            newRoot = root;
+            //newRoot = root;
             compareResult = root.lftChild.data.compareTo(x);
             if (compareResult > 0)
             {
-               newRoot = rotateWithLeftChild(root);
-               if (newRoot.lftChild == null) { break; }
+               root = rotateWithLeftChild(root);
+               if (root.lftChild == null) { break; }
             }
             if (rightTree == null)
             {
-               rightTree = newRoot;
-               //newRoot.lftChild = null; // cut reference to left child
+               rightTree = root;
             } else
             {
-               rightTreeMin = newRoot;
+               rightTreeMin.lftChild = root;
             }
+            rightTreeMin=root;
             root = root.lftChild;
-            rightTreeMin = newRoot.lftChild;
-            //add root to rightTree under rightTree's minimum node (as the left child of rightTreeMin),
-            // unless of course rightTree is null (in which case you should set rightTree to be root)
-            //then update the rightTreeMin to point to the working root node
-
+            rightTreeMin.lftChild=null;
          }
          //update the new working root:  set root to root's left child
          else if (compareResult < 0)
@@ -120,35 +116,31 @@ public class FHsplayTree<E extends Comparable<? super E>>
             compareResult = root.rtChild.data.compareTo(x);
             if (compareResult < 0)
             {
-               newRoot = rotateWithRightChild(root);
-               if (newRoot.rtChild == null) { break; }
-
+               root = rotateWithRightChild(root);
+               if (root.rtChild == null) { break; }
             }
             if (leftTree == null)
             {
-               leftTree = newRoot;
-               //newRoot.rtChild = null; // cut reference to right child
+               leftTree = root;
             } else
             {
-               leftTreeMax = newRoot;
+               leftTreeMax.rtChild = root;
             }
+            leftTreeMax = root;
             root = root.rtChild;
-            leftTreeMax.rtChild = newRoot;
-
-            //add root to leftTree under leftTree's maximum node (as the left child of leftTreeMax), unless of course leftTree is null (in which case you should set leftTree to be root)
-            // then update the leftTreeMax to point to the working root node
-            // update the new working root:  set root to root's right child
+            leftTreeMax.rtChild = null;
          } else
          { break; }
       }
+      //reassembling
       if (leftTree != null)
       {
-         leftTreeMax = root.lftChild;
+         leftTreeMax.rtChild = root.lftChild;
          root.lftChild = leftTree;
       }
       if (rightTree != null)
       {
-         rightTreeMin = root.rtChild;
+         rightTreeMin.lftChild = root.rtChild;
          root.rtChild = rightTree;
       }
       super.mRoot = root;

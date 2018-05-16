@@ -45,17 +45,13 @@ public class Foothill
 
       for (k = -1; k < 10; k++)
       {
-         //searchTree.contains(k);  // alternative to find() - different error return
-         //searchTree.find(k);
-
          try
          {
-            //k = 2;
-            System.out.println( "found " + searchTree.find(k));
+            System.out.println( "\nfound " + searchTree.find(k));
          }
          catch( Exception e )
          {
-            System.out.println( " oops " + e.getMessage() +" " + e.toString());
+            System.out.println( "\n oops " + e.getMessage() +" " + e.toString());
          }
 
 

@@ -38,14 +38,14 @@ public class Foothill
       searchTree.insert(9);
       System.out.println( "Traversal after insert of 9");
       printInfo(searchTree);
-      //for (k = -1; k < 10; k++)
-      //{
+      for (k = -1; k < 10; k++)
+      {
          //searchTree.contains(k);  // alternative to find() - different error return
          //searchTree.find(k);
 
          try
          {
-            k = 2;
+            //k = 2;
             System.out.println( "found " + searchTree.find(k));
          }
          catch( Exception e )
@@ -53,13 +53,14 @@ public class Foothill
             System.out.println( " oops " + e.getMessage() +" " + e.toString());
          }
 
-      //}
+
       System.out.println( "Traversal after find");
       printInfo(searchTree);
 
       System.out.println( "splay " + k + " --> root: "
               + searchTree.showRoot()
               + " height: " + searchTree.showHeight() );
+      }
    }
 
    public static void printInfo(FHsplayTree<Integer> searchTree)

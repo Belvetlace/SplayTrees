@@ -43,30 +43,30 @@ public class FHsplayTree<E extends Comparable<? super E>>
    @Override
    public boolean remove(E x)
    {
-      FHs_treeNode<E> mRoot = super.mRoot;
-      FHs_treeNode<E> splayedNode;
-      if (mRoot == null)
+      FHs_treeNode<E> newRoot;
+      FHs_treeNode<E> root;
+      if (super.mRoot == null)
       {
          return false;
       } else
       {
-         splayedNode = splay(super.mRoot, x);
+         root = splay(super.mRoot, x);
       }
-      if (x != mRoot)
+      int compareResult = x.compareTo(super.mRoot.data);
+      if (compareResult != 0)
       {
          return false;
       }
-      if (splayedNode.lftChild == null)
+      if (root.lftChild == null)
       {
-         splayedNode = mRoot.rtChild;
+         newRoot = root.rtChild;
       } else
       {
-         splayedNode = mRoot.lftChild;
-         FHs_treeNode<E> max = findMax(splayedNode);
-         splayedNode = splay(splayedNode, x);
-         splayedNode.rtChild = mRoot.rtChild;
+         newRoot = root.lftChild;
+         newRoot = splay(newRoot, x);
+         newRoot.rtChild = root.rtChild;
       }
-      super.mRoot = splayedNode;
+      super.mRoot = newRoot;
       return true;
    }
 
